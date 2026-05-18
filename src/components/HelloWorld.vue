@@ -12,10 +12,12 @@
           </div>
 
           <!-- 二次实名选项 -->
-          <el-radio-group v-model="selectedRadio" @change="handleRadioChange">
-            <el-radio value="可二次实名">可二次实名</el-radio>
-            <el-radio value="不可二次实名">不可二次实名</el-radio>
-          </el-radio-group>
+          <div>
+            <el-radio-group v-model="selectedRadio" @change="handleRadioChange">
+              <el-radio value="可二次实名">可二次实名</el-radio>
+              <el-radio value="不可二次实名">不可二次实名</el-radio>
+            </el-radio-group>
+          </div>
 
           <!-- 额外资产 -->
           <div class="full-width category-box">
@@ -30,6 +32,7 @@
         </div>
         <div class="countPrice">
           <el-button type="primary" class="submit-btn">计算价格</el-button>
+          <el-button type="warning" class="submit-btn">重置</el-button>
           <div class="rePrice">
             回收建议价：
             <el-text class="mx-1" type="success">{{ endPrice }}</el-text>
@@ -43,7 +46,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useCounterStore } from '../stores/counter'
+import { useCounterStore } from '@/stores/counter'
 
 // 拿到仓库实例
 const counterStore = useCounterStore()
