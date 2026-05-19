@@ -1,23 +1,23 @@
 <template>
-  <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  <WwqyPrice />
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import WwqyPrice from './assets/pages/wwqyPrice.vue';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
 </script>
 
-<style scoped>
-  *{
-    margin: 0 auto;
-  }
-  body{
+<style >
 
-  }
+
+
+body{
+background-image: url("@/assets/images/background01.jpg");
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+/* max-width: 100vh; */
+min-height: 100vh;   
+}
+
 </style>
