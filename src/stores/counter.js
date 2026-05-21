@@ -7,14 +7,14 @@ export const useCounterStore = defineStore('counter', {
     weaponPackage:[
         
         {wpName:"2021全球冠军赛",wpPrice:500,url:new URL('@/assets/images/weapon/21.png', import.meta.url).href},
-        {wpName:"2022全球冠军赛",wpPrice:100,url:new URL('@/assets/images/weapon/22.png', import.meta.url).href},
-        {wpName:"2023全球冠军赛",wpPrice:100,url:new URL('@/assets/images/weapon/23.png', import.meta.url).href},
-        {wpName:"2024全球冠军赛",wpPrice:100,url:new URL('@/assets/images/weapon/24.png', import.meta.url).href},
-        {wpName:"2025全球冠军赛",wpPrice:100,url:new URL('@/assets/images/weapon/25.jpg', import.meta.url).href},
-        {wpName:"离火扇",wpPrice:100,url:new URL('@/assets/images/weapon/离火刃.png', import.meta.url).href},
-        {wpName:"VTC 2025爪刀",wpPrice:200,url:new URL('@/assets/images/weapon/VTC25 爪刀.png', import.meta.url).href},
-        {wpName:"VTC 2026篆刀",wpPrice:200,url:new URL('@/assets/images/weapon/VTC26 篆刀.png', import.meta.url).href},
-        {wpName:"怜悯之刃",wpPrice:200,url:new URL('@/assets/images/weapon/怜悯之刃.png', import.meta.url).href},
+        {wpName:"2022全球冠军赛",wpPrice:50,url:new URL('@/assets/images/weapon/22.png', import.meta.url).href},
+        {wpName:"2023全球冠军赛",wpPrice:200,url:new URL('@/assets/images/weapon/23.png', import.meta.url).href},
+        {wpName:"2024全球冠军赛",wpPrice:300,url:new URL('@/assets/images/weapon/24.png', import.meta.url).href},
+        {wpName:"2025全球冠军赛",wpPrice:50,url:new URL('@/assets/images/weapon/25.jpg', import.meta.url).href},
+        {wpName:"离火扇",wpPrice:50,url:new URL('@/assets/images/weapon/离火刃.png', import.meta.url).href},
+        {wpName:"VTC 2025爪刀",wpPrice:50,url:new URL('@/assets/images/weapon/VTC25 爪刀.png', import.meta.url).href},
+        {wpName:"VTC 2026篆刀",wpPrice:50,url:new URL('@/assets/images/weapon/VTC26 篆刀.png', import.meta.url).href},
+        {wpName:"怜悯之刃",wpPrice:50,url:new URL('@/assets/images/weapon/怜悯之刃.png', import.meta.url).href},
 
     ]
   }),
