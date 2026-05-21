@@ -26,7 +26,7 @@
                         <div class="checkbox-group" id="knifeCheckboxGroup">
                             <el-checkbox-group v-model="checkedList" class="checkbox-group">
                                 <div v-for="(p, index) in wpObject" :key="p.wpName" class="checkbox-item">
-                                    <el-image style="width: 100px; height: 100px" :src="p.url" fit="cover"
+                                    <el-image style="width: 100px; height: 100px" :src="p.url" fit="contain"
                                         @click.native="checkedList = toggleItem(checkedList, p)" />
                                     <el-checkbox :label="p" size="large">{{ p.wpName }}</el-checkbox>
                                 </div>
@@ -61,7 +61,6 @@ const wpObject = counterStore.weaponPackage
 
 // 响应式数据
 const checkedList = ref([])
-const endPrice = ref(0)
 const inputValue = ref(0) // 输入框值
 const iftowChange = ref('可二次实名') // 单选框值
 
@@ -78,29 +77,34 @@ const toggleItem = (list, item) => {
 const checkTotal = computed(() => {
     return checkedList.value.reduce((sum, item) => sum + item.wpPrice, 0)
 })
+
 // 最终总价（实名打折，区域打折）
 const finalAllPrice = computed(() => {
-    var countPrice = endPrice.value
-    countPrice = inputValue.value + checkTotal.value
+    var countPrice = inputValue.value 
 
     // 价格区域打折
     if (countPrice <= 10000) {
-        countPrice *= 0.5
+        countPrice *= 0.05
     }else if(countPrice>10000 && countPrice<=30000){
-        countPrice *= 0.35
+        countPrice *= 0.035
     }else if(countPrice>30000 && countPrice<=40000){
-        countPrice *= 0.3
+        countPrice *= 0.03
     }else if(countPrice>40000){
-        countPrice *= 0.25
+        countPrice *= 0.025
     }
 
+    if(iftowChange.value === '可二次实名'){
+        countPrice = countPrice+ checkTotal.value
+    }else{
+        countPrice = countPrice * 0.85+ checkTotal.value
+    }
 
-    return iftowChange.value === '可二次实名' ? countPrice : countPrice * 0.85
+    return countPrice.toFixed(2)
 })
 
+// 重置
 const resetAll = () => {
     checkedList.value = []
-    endPrice.value = 0
     inputValue.value = 0
     iftowChange.value = '可二次实名'
 }
