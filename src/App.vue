@@ -1,23 +1,16 @@
 <template>
+  <Menu_topBar />
   <WwqyPrice />
 </template>
 
 <script setup>
 import WwqyPrice from './assets/pages/wwqyPrice.vue';
+import Menu_topBar from './components/Menu_topBar.vue';
 
 </script>
 
-<style >
+<style lang="css" scoped>
 
 
-
-body{
-background-image: url("@/assets/images/background01.jpg");
-background-size: cover;
-background-position: center;
-background-attachment: fixed;
-/* max-width: 100vh; */
-min-height: 100vh;   
-}
 
 </style>
