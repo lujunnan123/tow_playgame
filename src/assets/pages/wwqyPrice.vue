@@ -113,7 +113,7 @@ const resetAll = () => {
 <style lang="css" scoped>
 /* 基础布局 */
 .container {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.8);
 
     border-radius: 24px;
     padding: 2rem;

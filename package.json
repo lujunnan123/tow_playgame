@@ -1,7 +1,7 @@
 {
   "name": "project04-wwqy",
   "version": "0.0.0",
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build"
@@ -9,7 +9,8 @@
   "dependencies": {
     "element-plus": "^2.14.0",
     "pinia": "^3.0.4",
-    "vue": "^3.0.4"
+    "vue": "^3.0.4",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.7",

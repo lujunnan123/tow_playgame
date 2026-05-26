@@ -3,7 +3,11 @@ import { defineStore } from 'pinia'
 // 2. 定义仓库（第一个参数是唯一 ID）
 export const useCounterStore = defineStore('counter', {
   state: () => ({
-    count: [1,2,3,4,5,6,7,8,9],  // 数据
+    rateObj: [
+      {RateName:"源晶/元",Rate:0.1},
+      {RateName:"不可实名倍率",Rate:0.85},
+      {RateName:"区间倍率",Rate:0.35}
+    ],  // 数据
     weaponPackage:[
         
         {wpName:"2021全球冠军赛",wpPrice:500,url:new URL('@/assets/images/weapon/21.png', import.meta.url).href},

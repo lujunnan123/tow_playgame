@@ -1,6 +1,7 @@
 <template>
   <Menu_topBar />
-  <WwqyPrice />
+  <!-- <WwqyPrice /> -->
+  <router-view></router-view>
 </template>
 
 <script setup>

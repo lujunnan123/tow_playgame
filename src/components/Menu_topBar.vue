@@ -9,8 +9,12 @@
     @select="handleSelect"
     :ellipsis="false"
   >
-    <el-menu-item index="1">估价首页</el-menu-item>
-    <el-menu-item index="2">价格配置</el-menu-item>
+    <el-menu-item index="home">
+      估价首页
+    </el-menu-item>
+    <el-menu-item index="Pconfig" >      
+      价格配置
+    </el-menu-item>
     <el-menu-item index="3">组合配置</el-menu-item>
 
     </el-menu>
@@ -18,11 +22,16 @@
 
 <script setup>
 import { ref } from 'vue'
+import router from '../router'
+const activeIndex = ref('home')
 
-const activeIndex = ref('1')
-const activeIndex2 = ref('1')
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath)
+  if(key == "home"){
+    router.push('/')
+  }else if(key == "Pconfig"){
+    router.push('/Pconfig')
+  }
 }
 </script>
 <style lang="css" scoped>
