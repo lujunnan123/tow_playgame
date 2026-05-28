@@ -8,7 +8,7 @@
                     <!-- 皮肤资产价值 -->
                     <div class="form-item">
                         <label class="form-label">皮肤资产价值：</label>
-                        <el-input-number v-model="inputValue" :min="0" @change="handleChange" class="price-input"   controls-position="right"/>
+                        <input v-model="inputValue" :min="0" @change="handleChange" class="dark-input"  controls-position="right"/>
                     </div>
 
                     <!-- 二次实名选项 -->
@@ -36,13 +36,20 @@
                    
                 </div>
                 <div class="countPrice">
-                    <el-button type="warning" class="submit-btn" @click="resetAll">重置</el-button>
-                  
+
                     <div class="rePrice">
                         回收建议价：
                         <text style="color: greenyellow;">
                         {{ finalAllPrice }}</text>
                     </div>
+                    <div class="price_btn">
+                        <el-button type="warning" class="btn" @click="resetAll">重置</el-button>
+                        <el-button type="primary" class="btn" @click="copyText">复制文本</el-button>
+                    </div>
+                    <div class="price_text">
+                        <el-text style="color: #fff;">145级，铂金1；{{inputValue }}皮肤总价值；【枪皮】：；【QQ】；{{iftowChange}}</el-text>
+                    </div>
+
                 </div>
             </form>
         </div>
@@ -54,6 +61,7 @@
 document.title = "无畏契约估价"
 import { ref, computed } from 'vue'
 import { useCounterStore } from '@/stores/counter'
+import { ElText } from 'element-plus'
 
 // 拿到仓库实例
 const counterStore = useCounterStore()
@@ -108,6 +116,10 @@ const resetAll = () => {
     inputValue.value = 0
     iftowChange.value = '可二次实名'
 }
+// 文本复制
+const copyText = ()=>{
+
+}
 </script>
 
 <style lang="css" scoped>
@@ -118,7 +130,7 @@ const resetAll = () => {
     border-radius: 24px;
     padding: 2rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 2rem auto;
     border: 1px solid #5f7a93;
     box-sizing: border-box;
@@ -178,9 +190,53 @@ const resetAll = () => {
     color: #ffffff;
 }
 
-.price-input {
-    width: 80%;
+
+/* 🔥 深色背景专用输入框 */
+.dark-input {
+  width: 200px;
+  padding: 10px 15px;
+  font-size: 14px;
+
+  /* 半透明玻璃质感 */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+
+  /* 文字白色 */
+  color: #fff !important;
+  outline: none;
+
+  /* 动画效果 */
+  transition: all 0.3s ease;
 }
+
+/* 聚焦效果 */
+.dark-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+/* 提示文字灰色 */
+.dark-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 鼠标悬浮 */
+.dark-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 去掉输入框默认箭头（可选） */
+.dark-input::-webkit-outer-spin-button,
+.dark-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.dark-input {
+  -moz-appearance: textfield;
+}
+
 
 /* 分类盒子 */
 .full-width {
@@ -219,14 +275,10 @@ const resetAll = () => {
     display: flex;
     flex-direction: column;
 }
-
-/* 按钮样式 */
-.submit-btn {
-    align-self: flex-start;
-    padding: 0.6rem 2rem;
-    font-size: 1rem;
-    border-radius: 8px;
+.btn{
+    margin-top: 10px;
 }
+
 
 .btn-group {
     display: flex;
@@ -308,18 +360,29 @@ const resetAll = () => {
 .countPrice {
     width: 100%;
     display: flex;
-    /* justify-content: space-between; */
-
+    justify-content: space-between;
+    align-items: center;
 }
-
-/* :deep(el-text){
-    width: 100%;
-} */
-
 .rePrice {
-    margin-left: 50px;
     font-size: 20px;
-    width: 100%;
+    /* width: 350px; */
+    flex: 1;
     color: #fff;
+}
+.price_btn{
+    width: 100px;
+    text-align: center;
+    margin: 0 20px;
+}
+.price_btn .btn{
+    /* margin: 0 auto; */
+}
+.price_text{
+    border: #fff 1px solid;
+    flex: 1;
+    border-radius: 5px;
+    padding: 5px;
+    width: 200px;
+    height: 150px;
 }
 </style>

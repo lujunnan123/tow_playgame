@@ -8,13 +8,19 @@
             <div class="itemtop" v-for="(item, index) in rateStore" :key="index">
                 <div>
 
-                    {{ item.RateName }}：<el-input v-model="input" style="width: 240px" :placeholder='item.Rate' />
+                    {{ item.RateName }}：<input class="dark-input" v-model="input" style="width: 240px" :placeholder='item.Rate' />
                 </div>
             </div class="itemtop">
         </div>
     </div>
     <div class="container" id="mainContainer">
-        <h3>道具价格配置</h3>
+        <div class="title_bar">
+            <div class="title_text">道具价格配置</div>
+            <div class="title_option">                
+                <el-button type="primary">新增</el-button>
+                <el-button type="danger">删除选中</el-button>
+            </div>
+        </div>
         <hr />
 
         <el-table :data="weaponPackage" class="transparent-table">
@@ -94,12 +100,20 @@ const input = ref('')
     border-radius: 24px;
     padding: 2rem;
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 2rem auto;
     border: 1px solid #5f7a93;
     box-sizing: border-box;
 }
-
+.title_bar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.title_text{
+    font-size: 20px;
+    font-weight: bold;
+}
 /* 表单区域 */
 .form-container {
     margin-bottom: 2rem;
@@ -301,4 +315,54 @@ const input = ref('')
     width: 100%;
     color: #fff;
 }
+
+
+
+/* 🔥 深色背景专用输入框 */
+.dark-input {
+  width: 200px;
+  padding: 10px 15px;
+  font-size: 14px;
+
+  /* 半透明玻璃质感 */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+
+  /* 文字白色 */
+  color: #fff !important;
+  outline: none;
+
+  /* 动画效果 */
+  transition: all 0.3s ease;
+}
+
+/* 聚焦效果 */
+.dark-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+/* 提示文字灰色 */
+.dark-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 鼠标悬浮 */
+.dark-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 去掉输入框默认箭头（可选） */
+.dark-input::-webkit-outer-spin-button,
+.dark-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.dark-input {
+  -moz-appearance: textfield;
+}
+
+
 </style>
