@@ -26,7 +26,7 @@
                         <div class="checkbox-group" id="knifeCheckboxGroup">
                             <el-checkbox-group v-model="checkedList" class="checkbox-group">
                                 <div v-for="(p, index) in wpObject" :key="p.wpName" class="checkbox-item">
-                                    <el-image style="width: 100px; height: 100px" :src="p.url" fit="contain"
+                                    <el-image style="width: 160px; height: 160px" :src="p.url" fit="contain"
                                         @click.native="checkedList = toggleItem(checkedList, p)" />
                                     <el-checkbox :label="p" size="large">{{ p.wpName }}</el-checkbox>
                                 </div>
@@ -44,11 +44,11 @@
                     </div>
                     <div class="price_btn">
                         <el-button type="warning" class="btn" @click="resetAll">重置</el-button>
-                        <el-button type="primary" class="btn" @click="copyText">复制文本</el-button>
+                        <!-- <el-button type="primary" class="btn" @click="copyText">复制文本</el-button> -->
                     </div>
-                    <div class="price_text">
+                    <!-- <div class="price_text">
                         <el-text style="color: #fff;">145级，铂金1；{{inputValue }}皮肤总价值；【枪皮】：；【QQ】；{{iftowChange}}</el-text>
-                    </div>
+                    </div> -->
 
                 </div>
             </form>
@@ -66,11 +66,17 @@ import { ElText } from 'element-plus'
 // 拿到仓库实例
 const counterStore = useCounterStore()
 const wpObject = counterStore.weaponPackage
+const rateStore = counterStore.rateObj
 
 // 响应式数据
 const checkedList = ref([])
 const inputValue = ref(0) // 输入框值
 const iftowChange = ref('可二次实名') // 单选框值
+const baseRate = rateStore[0].Rate
+const towRate = rateStore[1].Rate
+
+console.log(baseRate,towRate);
+
 
 // 点击图片切换选中状态（核心方法）
 const toggleItem = (list, item) => {
@@ -92,19 +98,19 @@ const finalAllPrice = computed(() => {
 
     // 价格区域打折
     if (countPrice <= 10000) {
-        countPrice *= 0.05
+        countPrice =countPrice*baseRate*0.5
     }else if(countPrice>10000 && countPrice<=30000){
-        countPrice *= 0.035
+        countPrice =countPrice*baseRate*0.35
     }else if(countPrice>30000 && countPrice<=40000){
-        countPrice *= 0.03
+        countPrice =countPrice*baseRate*0.3
     }else if(countPrice>40000){
-        countPrice *= 0.025
+        countPrice =countPrice*baseRate*0.25
     }
 
     if(iftowChange.value === '可二次实名'){
         countPrice = countPrice+ checkTotal.value
     }else{
-        countPrice = countPrice * 0.85+ checkTotal.value
+        countPrice = countPrice * towRate + checkTotal.value
     }
 
     return countPrice.toFixed(2)
@@ -126,12 +132,11 @@ const copyText = ()=>{
 /* 基础布局 */
 .container {
     background-color: rgba(0, 0, 0, 0.8);
-
     border-radius: 24px;
     padding: 2rem;
     width: 100%;
     max-width: 1200px;
-    margin: 2rem auto;
+    margin: 70px auto 0;
     border: 1px solid #5f7a93;
     box-sizing: border-box;
 }
@@ -373,9 +378,6 @@ const copyText = ()=>{
     width: 100px;
     text-align: center;
     margin: 0 20px;
-}
-.price_btn .btn{
-    /* margin: 0 auto; */
 }
 .price_text{
     border: #fff 1px solid;

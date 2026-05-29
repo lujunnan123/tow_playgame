@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 export const useCounterStore = defineStore('counter', {
   state: () => ({
     rateObj: [
-      {RateName:"源晶/元",Rate:0.1},
+      {RateName:"元/源晶",Rate:0.1},
       {RateName:"不可实名倍率",Rate:0.85},
       {RateName:"区间倍率",Rate:0.35}
     ],  // 数据
@@ -32,11 +32,23 @@ export const useCounterStore = defineStore('counter', {
 
   // 方法（修改 state）
   actions: {
-    increment() {
-      this.count++
+    // 价格修改
+    updatewPrice(index,num) {
+      // console.log("123");      
+      this.weaponPackage[index].wpPrice = num;
+      // console.log("价格修改成功："+this.weaponPackage[index].wpPrice);      
     },
-    decrement() {
-      this.count--
+    updatewName(index,str) {
+      // console.log("123");      
+      this.weaponPackage[index].wpName = str;
+      // console.log("价格修改成功："+this.weaponPackage[index].wpPrice);      
+    },
+
+    // 比例修改
+    updateRate(index,num) {
+      console.log("123");      
+      this.rateObj[index].Rate = num;
+      console.log("比例修改成功："+this.rateObj[index].Rate);      
     },
   },
 })

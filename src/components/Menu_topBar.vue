@@ -35,6 +35,13 @@ const handleSelect = (key, keyPath) => {
 }
 </script>
 <style lang="css" scoped>
+.el-menu--horizontal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
 .el-menu--horizontal > .el-menu-item {
   margin:0 auto;
 }
