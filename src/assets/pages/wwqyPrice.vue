@@ -75,11 +75,10 @@ const iftowChange = ref('可二次实名') // 单选框值
 const baseRate = rateStore[0].Rate
 const towRate = rateStore[1].Rate
 
-console.log(baseRate,towRate);
-
-
 // 点击图片切换选中状态（核心方法）
 const toggleItem = (list, item) => {
+    console.log(list,item);
+    
     const found = list.find(i => i.wpName === item.wpName)
     if (found) {
         return list.filter(i => i.wpName !== item.wpName)

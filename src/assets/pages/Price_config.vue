@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-
+        <!-- 配置标题 -->
         <div class="title_top">
             <div class="title">估价道具配置</div>
             <div class="title_btn">
                 <button class="btn">新增一级类目</button>
-                <button class="btn">保存配置</button>
             </div>
         </div>
+        <!-- 基础配置 -->
         <div>
             <!-- 基础配置区域 -->
             <div id="formContainer" class="form-container">
@@ -15,24 +15,26 @@
                 <hr />
                 <div class="itemtop">
                     <div class="itop_item" v-for="(item, index) in rateStore" :key="index">
-                        {{ item.RateName }}：<input class="dark-input" style="width: 240px" :placeholder='item.Rate' v-model="item.Rate" @blur="RateChange(index,item)"/>
+                        {{ item.RateName }}：<input class="dark-input" style="width: 240px" :placeholder='item.Rate'
+                            v-model="item.Rate" @blur="RateChange(index, item)" />
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 道具价格配置 -->
         <div>
             <div class="title_bar">
                 <div class="title_text">道具价格配置</div>
                 <div class="title_option">
-                    <el-button type="primary">新增</el-button>
+                    <el-button type="primary" @click="dialogVisible = true">
+                        新增
+                    </el-button>
                     <el-button type="danger">删除选中</el-button>
                 </div>
             </div>
             <hr />
 
-            <el-table 
-                :data="weaponPackage" 
-                :header-cell-style="{
+            <el-table :data="weaponPackage" :header-cell-style="{
                 backgroundColor: '#1A1E20 !important',
                 color: '#fff',
                 borderColor: 'rgba(255,255,255,0.2)'
@@ -45,40 +47,58 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="二级道具" width="450">
-                    <template #default="scope">                        
-                        <input class="dark-input" style="width: 300px" :placeholder='scope.row.wpName' v-model="scope.row.wpName" @blur="WpNameChange(scope)"/>
+                    <template #default="scope">
+                        <input class="dark-input" style="width: 300px" :placeholder='scope.row.wpName'
+                            v-model="scope.row.wpName" @blur="WpNameChange(scope)" />
                     </template>
                 </el-table-column>
-                <el-table-column property="wpPrice" label="价格" width="250" >
+                <el-table-column property="wpPrice" label="价格" width="250">
                     <template #default="scope">
-                        <input class="dark-input" style="width: 120px" :placeholder='scope.row.wpPrice' v-model="scope.row.wpPrice" @blur="PriceChange(scope)" />
+                        <input class="dark-input" style="width: 120px" :placeholder='scope.row.wpPrice'
+                            v-model="scope.row.wpPrice" @blur="PriceChange(scope)" />
                     </template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" min-width="120">
-                    <template #default>
-                        <!-- 单行删除按钮 -->
-                        <el-popconfirm width="220" :icon="InfoFilled" icon-color="#626AEF"
-                            title="确定要删除?" @cancel="onCancel">
+                    <!-- 单行删除 -->
+                    <template #default="scope">
+                        <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除?"
+                            @confirm="handleDelete(scope)" @cancel="cancelEvent">
                             <template #reference>
-                                <el-button type="danger">删除</el-button>
-                            </template>
-                            <template #actions="{ confirm, cancel }">
-                                <el-button size="small" @click="cancel">否</el-button>
-                                <el-button type="danger" size="small" @click="confirm">
-                                    是
-                                </el-button>
+                                <el-button type="danger">Delete</el-button>
                             </template>
                         </el-popconfirm>
-                       
                     </template>
                 </el-table-column>
             </el-table>
         </div>
+
+
+        <!-- 弹窗：只用 el-dialog + input -->
+        <el-dialog v-model="dialogVisible" title="新增道具" width="400px" @close="inputValue = ''" >
+            <!-- 图片上传 -->
+            <el-upload action="#" list-type="picture-card" :auto-upload="false" limit=1 :on-change = "getImgUrl">
+                <el-icon>
+                    <Plus />
+                </el-icon>
+
+            </el-upload>
+
+            道具名称:<el-input v-model="addName" placeholder="请输入内容" />
+            价格:<el-input v-model="addPrice" placeholder="请输入内容" />
+
+            <!-- 底部按钮 -->
+            <template #footer>
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="submitAdd">确认添加</el-button>
+            </template>
+        </el-dialog>
+
     </div>
 </template>
 
 <script setup>
 import { useCounterStore } from '@/stores/counter.js'
+import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 const counterStore = useCounterStore()
 const rateStore = counterStore.rateObj
@@ -86,26 +106,45 @@ const weaponPackage = counterStore.weaponPackage
 const inputValue = ref('')
 const dialogVisible = ref(false)
 
+const addImage = ref('')
+const addName = ref('')
+const addPrice = ref('')
+
 
 // 调整基础倍率
-const RateChange = (indexNum,Iteminfo)=>{
+const RateChange = (indexNum, Iteminfo) => {
     const index = indexNum
-    const value =Number(Iteminfo.Rate)  
-    counterStore.updateRate(index,value)    
+    const value = Number(Iteminfo.Rate)
+    counterStore.updateRate(index, value)
 }
 
 // 修改名称
-const WpNameChange = (Iteminfo)=>{
+const WpNameChange = (Iteminfo) => {
     const index = Iteminfo.$index
-    const value =Iteminfo.row.wpName
-    counterStore.updatewName(index,value)    
+    const value = Iteminfo.row.wpName
+    counterStore.updatewName(index, value)
 }
 
 // 修改价格
-const PriceChange = (Iteminfo)=>{
+const PriceChange = (Iteminfo) => {
     const index = Iteminfo.$index
-    const value =Number(Iteminfo.row.wpPrice)  
-    counterStore.updatewPrice(index,value)    
+    const value = Number(Iteminfo.row.wpPrice)
+    counterStore.updatewPrice(index, value)
+}
+
+// 单行删除
+const handleDelete = (Iteminfo) => {
+    const delIndex = Iteminfo.$index
+    counterStore.deleteItem(delIndex)
+}
+// 图片上上传
+const getImgUrl = (file)=>{
+    const url = URL.createObjectURL(file.raw)
+    addImage.value = url
+}
+// 新增子项
+const submitAdd = ()=>{
+    counterStore.addItem(addName.value,addPrice.value,addImage.value)
 }
 
 </script>
@@ -159,11 +198,13 @@ const PriceChange = (Iteminfo)=>{
     border: 1px solid #5f7a93;
     box-sizing: border-box;
 }
-.title_top{
+
+.title_top {
     display: flex;
     justify-content: space-between;
 }
-.title_top .title{
+
+.title_top .title {
     font-size: 20px;
     font-weight: bold;
 }
@@ -171,19 +212,20 @@ const PriceChange = (Iteminfo)=>{
 .title_top .btn {
     margin: 0 5px;
     background-color: #5f7a93;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      outline: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 100px;
-    }
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+}
+
 .title_bar {
     display: flex;
     justify-content: space-between;

@@ -32,6 +32,12 @@ export const useCounterStore = defineStore('counter', {
 
   // 方法（修改 state）
   actions: {
+    // 新增数据
+    addItem(addName,addPrice,addImage){
+      const addObj = {wpName:addName,wpPrice:Number(addPrice),url:addImage}
+      this.weaponPackage.unshift(addObj)
+      console.log('新增成功：'+this.weaponPackage);      
+    },
     // 价格修改
     updatewPrice(index,num) {
       // console.log("123");      
@@ -42,6 +48,12 @@ export const useCounterStore = defineStore('counter', {
       // console.log("123");      
       this.weaponPackage[index].wpName = str;
       // console.log("价格修改成功："+this.weaponPackage[index].wpPrice);      
+    },
+    // 数据删除
+    deleteItem(index){
+      const a = this.weaponPackage.splice(index,1)
+      console.log(a);
+      
     },
 
     // 比例修改
