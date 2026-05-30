@@ -51,4 +51,5 @@ export const useCounterStore = defineStore('counter', {
       console.log("比例修改成功："+this.rateObj[index].Rate);      
     },
   },
+    persist: true
 })
