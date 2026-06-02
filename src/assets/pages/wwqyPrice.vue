@@ -96,16 +96,14 @@ const finalAllPrice = computed(() => {
     var countPrice = inputValue.value 
 
     // 价格区域打折
-    if (countPrice <= 10000) {
-        countPrice =countPrice*baseRate*0.5
-    }else if(countPrice>10000 && countPrice<=30000){
+    if(countPrice>0 && countPrice<=40000){
         countPrice =countPrice*baseRate*0.35
-    }else if(countPrice>30000 && countPrice<=40000){
-        countPrice =countPrice*baseRate*0.3
-    }else if(countPrice>40000){
-        countPrice =countPrice*baseRate*0.25
+    }
+    else{
+        countPrice =countPrice*baseRate*0.22
     }
 
+    
     if(iftowChange.value === '可二次实名'){
         countPrice = countPrice+ checkTotal.value
     }else{

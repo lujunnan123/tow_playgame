@@ -145,6 +145,7 @@ const getImgUrl = (file)=>{
 // 新增子项
 const submitAdd = ()=>{
     counterStore.addItem(addName.value,addPrice.value,addImage.value)
+    dialogVisible.value = false
 }
 
 </script>
