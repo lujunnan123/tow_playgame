@@ -16,7 +16,11 @@
                 <div class="itemtop">
                     <div class="itop_item" v-for="(item, index) in rateStore" :key="index">
                         {{ item.RateName }}：<input class="dark-input" style="width: 240px" :placeholder='item.Rate'
-                            v-model="item.Rate" @blur="RateChange(index, item)" />
+                            v-model="item.Rate" @blur="RateBaseChange(index, item)" />
+                    </div>
+                    <div class="itop_item">
+                        <el-button plain @click="dialogVisible1 = true">区间倍率调节</el-button>
+
                     </div>
                 </div>
             </div>
@@ -73,10 +77,10 @@
         </div>
 
 
-        <!-- 弹窗：只用 el-dialog + input -->
-        <el-dialog v-model="dialogVisible" title="新增道具" width="400px" @close="inputValue = ''" >
+        <!-- 二级新增弹窗：只用 el-dialog + input -->
+        <el-dialog v-model="dialogVisible" title="新增道具" width="400px" @close="inputValue = ''">
             <!-- 图片上传 -->
-            <el-upload action="#" list-type="picture-card" :auto-upload="false" limit=1 :on-change = "getImgUrl">
+            <el-upload action="#" list-type="picture-card" :auto-upload="false" limit=1 :on-change="getImgUrl">
                 <el-icon>
                     <Plus />
                 </el-icon>
@@ -93,18 +97,45 @@
             </template>
         </el-dialog>
 
+        <!-- 区间倍率弹窗 -->
+        <el-dialog v-model="dialogVisible1" title="倍率调整" width="450px" @close="inputValue = ''">
+
+            <div v-for="( item,index) in rangeRateStore" :key="index">
+                
+                <div class="RateItem" style="margin-top:5px;color: #000;">
+                    <el-input style="width: 100px;" v-model="item.min" :placeholder="item.min" @blur="RateChange(index,item)" /> ：
+                    <el-input style="width: 100px;" v-model="item.max" :placeholder="item.max" @blur="RateChange(index,item)" />
+                    倍率：
+                    <el-input style="width: 100px;" v-model="item.rate" :placeholder="item.value" @blur="RateChange(index,item)" />
+                </div>
+            </div>
+           
+
+            <!-- 底部按钮 -->
+            <template #footer>
+                <el-button @click="dialogVisible1 = false">取消</el-button>
+                <el-button type="primary" @click="dialogVisible1 = false">确认</el-button>
+            </template>
+        </el-dialog>
+
+
+
     </div>
 </template>
 
 <script setup>
 import { useCounterStore } from '@/stores/counter.js'
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 const counterStore = useCounterStore()
 const rateStore = counterStore.rateObj
 const weaponPackage = counterStore.weaponPackage
+const rangeRateStore = counterStore.rangeRate
+// console.log(rangeRateStore);
+
 const inputValue = ref('')
 const dialogVisible = ref(false)
+const dialogVisible1 = ref(false)
 
 const addImage = ref('')
 const addName = ref('')
@@ -112,7 +143,7 @@ const addPrice = ref('')
 
 
 // 调整基础倍率
-const RateChange = (indexNum, Iteminfo) => {
+const RateBaseChange = (indexNum, Iteminfo) => {
     const index = indexNum
     const value = Number(Iteminfo.Rate)
     counterStore.updateRate(index, value)
@@ -138,14 +169,19 @@ const handleDelete = (Iteminfo) => {
     counterStore.deleteItem(delIndex)
 }
 // 图片上上传
-const getImgUrl = (file)=>{
+const getImgUrl = (file) => {
     const url = URL.createObjectURL(file.raw)
     addImage.value = url
 }
 // 新增子项
-const submitAdd = ()=>{
-    counterStore.addItem(addName.value,addPrice.value,addImage.value)
+const submitAdd = () => {
+    counterStore.addItem(addName.value, addPrice.value, addImage.value)
     dialogVisible.value = false
+}
+// 倍率调整
+const RateChange = (index,Iteminfo)=>{
+    console.log(index,Iteminfo);
+    counterStore.updateRangeRate(index,Iteminfo)
 }
 
 </script>
@@ -179,6 +215,8 @@ const submitAdd = ()=>{
 .itemtop {
     margin-top: 10px;
     display: flex;
+    justify-content: center;
+    align-items: center;
 
 }
 

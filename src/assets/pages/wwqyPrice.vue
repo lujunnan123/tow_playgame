@@ -67,6 +67,7 @@ import { ElText } from 'element-plus'
 const counterStore = useCounterStore()
 const wpObject = counterStore.weaponPackage
 const rateStore = counterStore.rateObj
+const rateRangeStore = counterStore.rangeRate
 
 // 响应式数据
 const checkedList = ref([])
@@ -77,7 +78,7 @@ const towRate = rateStore[1].Rate
 
 // 点击图片切换选中状态（核心方法）
 const toggleItem = (list, item) => {
-    console.log(list,item);
+    // console.log(list,item);
     
     const found = list.find(i => i.wpName === item.wpName)
     if (found) {
@@ -96,14 +97,22 @@ const finalAllPrice = computed(() => {
     var countPrice = inputValue.value 
 
     // 价格区域打折
-    if(countPrice>0 && countPrice<=40000){
-        countPrice =countPrice*baseRate*0.35
-    }
-    else{
-        countPrice =countPrice*baseRate*0.22
+    for (let index = 0; index < rateRangeStore.length; index++) {
+        const element = rateRangeStore[index];
+        if (countPrice>element.min && countPrice<=element.max) {
+           countPrice =countPrice*baseRate*element.value
+        }
     }
 
-    
+
+    // if(countPrice>0 && countPrice<=40000){
+    //     countPrice =countPrice*baseRate*0.35
+    // }
+    // else{
+    //     countPrice =countPrice*baseRate*0.22
+    // }
+
+    // 二次打折
     if(iftowChange.value === '可二次实名'){
         countPrice = countPrice+ checkTotal.value
     }else{
