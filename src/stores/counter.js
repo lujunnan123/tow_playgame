@@ -8,9 +8,11 @@ export const useCounterStore = defineStore('counter', {
       { RateName: "不可实名倍率", Rate: 0.85 },
     ],
     rangeRate: [
-      { min: 0, max: 10000, value: 0.35 },
-      { min:10000, max: 100000, value: 0.25 },
-      { min: 100000, max: 900719925474099, value: 0.22 }
+      { min: 0, max: 12000, value: 0.4 },
+      { min: 12000, max: 35000, value: 0.33 },
+      { min: 35000, max: 60000, value: 0.3 },
+      { min: 60000, max: 90000, value: 0.25 },
+      { min: 90000, max: 900719925474099, value: 0.22 }
 
     ],
     weaponPackage: [
@@ -57,7 +59,7 @@ export const useCounterStore = defineStore('counter', {
     // 数据删除
     deleteItem(index) {
       const a = this.weaponPackage.splice(index, 1)
-      console.log(a);
+      // console.log(a);
 
     },
 

@@ -123,7 +123,7 @@ const finalAllPrice = computed(() => {
         countPrice = countPrice * towRate + checkTotal.value
     }
 
-    return Number(countPrice.toFixed(2))
+    return Number(Number(countPrice || 0).toFixed(2))
 })
 
 // 重置
