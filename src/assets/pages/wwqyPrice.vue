@@ -94,13 +94,17 @@ const checkTotal = computed(() => {
 
 // 最终总价（实名打折，区域打折）
 const finalAllPrice = computed(() => {
-    var countPrice = inputValue.value 
+    var countPrice = inputValue.value || 0
+    console.log(countPrice);
+    
 
     // 价格区域打折
     for (let index = 0; index < rateRangeStore.length; index++) {
         const element = rateRangeStore[index];
         if (countPrice>element.min && countPrice<=element.max) {
            countPrice =countPrice*baseRate*element.value
+           console.log(countPrice+'=输入值* 基础倍率：'+baseRate+'*区间倍率：'+element.value);
+           
         }
     }
 
@@ -119,7 +123,7 @@ const finalAllPrice = computed(() => {
         countPrice = countPrice * towRate + checkTotal.value
     }
 
-    return countPrice.toFixed(2)
+    return Number(countPrice.toFixed(2))
 })
 
 // 重置

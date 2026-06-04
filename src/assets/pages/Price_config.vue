@@ -101,15 +101,18 @@
         <el-dialog v-model="dialogVisible1" title="倍率调整" width="450px" @close="inputValue = ''">
 
             <div v-for="( item,index) in rangeRateStore" :key="index">
-                
                 <div class="RateItem" style="margin-top:5px;color: #000;">
                     <el-input style="width: 100px;" v-model="item.min" :placeholder="item.min" @blur="RateChange(index,item)" /> ：
                     <el-input style="width: 100px;" v-model="item.max" :placeholder="item.max" @blur="RateChange(index,item)" />
                     倍率：
-                    <el-input style="width: 100px;" v-model="item.rate" :placeholder="item.value" @blur="RateChange(index,item)" />
+                    <el-input style="width: 100px;" v-model="item.value" :placeholder="item.value" @blur="RateChange(index,item)" />
+                    
+                    <el-button style="margin-left: 5px;" size="small" :icon="Minus" circle @click="RRateDel(index)" />
                 </div>
             </div>
-           
+            <div>
+                <el-button style="margin-top: 5px;" @click="RRateAdd">新增</el-button>
+            </div>
 
             <!-- 底部按钮 -->
             <template #footer>
@@ -125,7 +128,7 @@
 
 <script setup>
 import { useCounterStore } from '@/stores/counter.js'
-import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { Delete, Download, Plus, ZoomIn,Minus } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 const counterStore = useCounterStore()
 const rateStore = counterStore.rateObj
@@ -178,10 +181,18 @@ const submitAdd = () => {
     counterStore.addItem(addName.value, addPrice.value, addImage.value)
     dialogVisible.value = false
 }
-// 倍率调整
+// 区间倍率调整
 const RateChange = (index,Iteminfo)=>{
-    console.log(index,Iteminfo);
+    // console.log(index,Iteminfo);
     counterStore.updateRangeRate(index,Iteminfo)
+}
+// 区间倍率删除
+const RRateDel = (num)=>{
+    counterStore.delRangeRate(num)
+}
+// 区间倍率新增
+const RRateAdd = ()=>{
+    counterStore.addRangeRate()
 }
 
 </script>

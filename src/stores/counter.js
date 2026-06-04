@@ -4,25 +4,26 @@ import { defineStore } from 'pinia'
 export const useCounterStore = defineStore('counter', {
   state: () => ({
     rateObj: [
-      { RateName: "元/源晶", Rate: 0.077},
+      { RateName: "元/源晶", Rate: 0.1},
       { RateName: "不可实名倍率", Rate: 0.85 },
     ],
     rangeRate: [
-      { min: 0, max: 40000, value: 0.35 },
-      { min: 40000, max: 1000000, value: 0.22 },
+      { min: 0, max: 10000, value: 0.35 },
+      { min:10000, max: 100000, value: 0.25 },
+      { min: 100000, max: 900719925474099, value: 0.22 }
 
     ],
     weaponPackage: [
 
-      { wpName: "2021全球冠军赛", wpPrice: 500, url: new URL('@/assets/images/weapon/21.png', import.meta.url).href },
-      { wpName: "2022全球冠军赛", wpPrice: 150, url: new URL('@/assets/images/weapon/22.png', import.meta.url).href },
-      { wpName: "2023全球冠军赛", wpPrice: 350, url: new URL('@/assets/images/weapon/23.png', import.meta.url).href },
-      { wpName: "2024全球冠军赛", wpPrice: 350, url: new URL('@/assets/images/weapon/24.png', import.meta.url).href },
+      { wpName: "2021全球冠军赛", wpPrice: 300, url: new URL('@/assets/images/weapon/21.png', import.meta.url).href },
+      { wpName: "2022全球冠军赛", wpPrice: 100, url: new URL('@/assets/images/weapon/22.png', import.meta.url).href },
+      { wpName: "2023全球冠军赛", wpPrice: 200, url: new URL('@/assets/images/weapon/23.png', import.meta.url).href },
+      { wpName: "2024全球冠军赛", wpPrice: 200, url: new URL('@/assets/images/weapon/24.png', import.meta.url).href },
       { wpName: "2025全球冠军赛", wpPrice: 100, url: new URL('@/assets/images/weapon/25.jpg', import.meta.url).href },
-      { wpName: "离火扇", wpPrice: 300, url: new URL('@/assets/images/weapon/lihuo.png', import.meta.url).href },
-      { wpName: "VTC 2025爪刀", wpPrice: 250, url: new URL('@/assets/images/weapon/VTC25zhuadao.png', import.meta.url).href },
-      { wpName: "VTC 2026篆刀", wpPrice: 250, url: new URL('@/assets/images/weapon/VTC26zhuandao.png', import.meta.url).href },
-      { wpName: "怜悯之刃", wpPrice: 150, url: new URL('@/assets/images/weapon/lianmin.png', import.meta.url).href },
+      { wpName: "离火扇", wpPrice: 200, url: new URL('@/assets/images/weapon/lihuo.png', import.meta.url).href },
+      { wpName: "VTC 2025爪刀", wpPrice: 50, url: new URL('@/assets/images/weapon/VTC25zhuadao.png', import.meta.url).href },
+      { wpName: "VTC 2026篆刀", wpPrice: 50, url: new URL('@/assets/images/weapon/VTC26zhuandao.png', import.meta.url).href },
+      { wpName: "怜悯之刃", wpPrice: 50, url: new URL('@/assets/images/weapon/lianmin.png', import.meta.url).href },
 
     ]
   }),
@@ -69,9 +70,22 @@ export const useCounterStore = defineStore('counter', {
     
     // 区间比例修改
     updateRangeRate(index,obj){
-      // console.log("调用了区间修改");
+      // console.log("调用了区间修改"+obj);
       this.rangeRate[index] = obj
+      // console.log(this.rangeRate);      
+    },
+    // 区间比例新增
+    addRangeRate(){
+      const obj = { min: 0, max: 900719925474099, value: 0 }
+      this.rangeRate.push(obj)
+    },
+    // 区间比例删除
+    delRangeRate(index){
+      this.rangeRate.splice(index,1)
     }
+
+
+
   },
   persist: true
 })
