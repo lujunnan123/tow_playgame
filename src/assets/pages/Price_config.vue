@@ -4,6 +4,7 @@
         <div class="title_top">
             <div class="title">估价道具配置</div>
             <div class="title_btn">
+                <button class="btn">上传配置</button>
                 <button class="btn">新增一级类目</button>
             </div>
         </div>
@@ -25,6 +26,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- 品质配置 -->
+        <div>
+            <div id="formContainer" class="form-container">
+                <h3>品质配置</h3>
+                <hr />
+                <div class="itemtop">
+                    <div class="itop_item" v-for="(item, index) in levelStore" :key="index">
+                        {{ item.levelName }}：<input class="dark-input" style="width: 240px" :placeholder='item.levelPrice'
+                            v-model="item.levelPrice" @blur="LevelPriceChange(index, item)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 道具价格配置 -->
         <div>
             <div class="title_bar">
@@ -134,6 +150,7 @@ const counterStore = useCounterStore()
 const rateStore = counterStore.rateObj
 const weaponPackage = counterStore.weaponPackage
 const rangeRateStore = counterStore.rangeRate
+const levelStore = counterStore.levelObj
 // console.log(rangeRateStore);
 
 const inputValue = ref('')
@@ -151,7 +168,6 @@ const RateBaseChange = (indexNum, Iteminfo) => {
     const value = Number(Iteminfo.Rate)
     counterStore.updateRate(index, value)
 }
-
 // 修改名称
 const WpNameChange = (Iteminfo) => {
     const index = Iteminfo.$index
@@ -195,6 +211,12 @@ const RRateAdd = ()=>{
     counterStore.addRangeRate()
 }
 
+// 调整品质价格
+const LevelPriceChange = (indexNum, Iteminfo) => {
+    const index = indexNum
+    const value = Number(Iteminfo.levelPrice)
+    counterStore.updateLevelPrice(index, value)
+}
 </script>
 
 

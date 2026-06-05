@@ -26,7 +26,7 @@ import router from '../router'
 const activeIndex = ref('home')
 
 const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
   if(key == "home"){
     router.push('/')
   }else if(key == "Pconfig"){

@@ -13,7 +13,11 @@ export const useCounterStore = defineStore('counter', {
       { min: 35000, max: 60000, value: 0.3 },
       { min: 60000, max: 90000, value: 0.25 },
       { min: 90000, max: 900719925474099, value: 0.22 }
-
+    ],
+    levelObj: [
+      { levelName: "紫色", levelPrice: 30 },
+      { levelName: "橙色", levelPrice: 50 },
+      { levelName: "金色", levelPrice: 80 },
     ],
     weaponPackage: [
 
@@ -84,10 +88,14 @@ export const useCounterStore = defineStore('counter', {
     // 区间比例删除
     delRangeRate(index){
       this.rangeRate.splice(index,1)
+    },
+
+    // 品质价格修改
+    updateLevelPrice(index, num) {
+      // console.log("123");
+      this.levelObj[index].levelPrice = num;
+      console.log("价格修改成功：" + this.levelObj);
     }
-
-
-
   },
   persist: true
 })

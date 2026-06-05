@@ -8,7 +8,8 @@
                     <!-- 皮肤资产价值 -->
                     <div class="form-item">
                         <label class="form-label">皮肤资产价值：</label>
-                        <input v-model="inputValue" :min="0" @change="handleChange" class="dark-input"  controls-position="right"/>
+                        <input v-model="inputValue" :min="0" @focus="handleFocus" @change="handleChange"
+                            class="dark-input" controls-position="right" />
                     </div>
 
                     <!-- 二次实名选项 -->
@@ -33,18 +34,25 @@
                             </el-checkbox-group>
                         </div>
                     </div>
-                   
+
+                </div>
+                
+                <div class="exContent" style="color: #fff;">
+                    金色数量：<input @focus="handleFocus" v-model="goldNum" class="dark-input" />
+                    橙色数量：<input @focus="handleFocus" v-model="orangeNum" class="dark-input" />
+                    紫色数量：<input @focus="handleFocus" v-model="purpleNum" class="dark-input" />
                 </div>
                 <div class="countPrice">
 
                     <div class="rePrice">
                         回收建议价：
                         <text style="color: greenyellow;">
-                        {{ finalAllPrice }}</text>
+                            {{ finalAllPrice }}</text>
                     </div>
+
+
                     <div class="price_btn">
                         <el-button type="warning" class="btn" @click="resetAll">重置</el-button>
-                        <!-- <el-button type="primary" class="btn" @click="copyText">复制文本</el-button> -->
                     </div>
                     <!-- <div class="price_text">
                         <el-text style="color: #fff;">145级，铂金1；{{inputValue }}皮肤总价值；【枪皮】：；【QQ】；{{iftowChange}}</el-text>
@@ -68,6 +76,7 @@ const counterStore = useCounterStore()
 const wpObject = counterStore.weaponPackage
 const rateStore = counterStore.rateObj
 const rateRangeStore = counterStore.rangeRate
+const levelStore = counterStore.levelObj
 
 // 响应式数据
 const checkedList = ref([])
@@ -75,67 +84,81 @@ const inputValue = ref(0) // 输入框值
 const iftowChange = ref('可二次实名') // 单选框值
 const baseRate = rateStore[0].Rate
 const towRate = rateStore[1].Rate
+const purpleNum = ref(0)
+const goldNum = ref(0)
+const orangeNum = ref(0)
+const purplePrice = levelStore[0].levelPrice
+const orangePrice = levelStore[1].levelPrice
+const goldPrice = levelStore[2].levelPrice
 
-// 点击图片切换选中状态（核心方法）
-const toggleItem = (list, item) => {
-    // console.log(list,item);
-    
-    const found = list.find(i => i.wpName === item.wpName)
-    if (found) {
-        return list.filter(i => i.wpName !== item.wpName)
-    } else {
-        return [...list, item]
-    }
-}
-// 复选框价格合计
-const checkTotal = computed(() => {
-    return checkedList.value.reduce((sum, item) => sum + item.wpPrice, 0)
-})
 
-// 最终总价（实名打折，区域打折）
-const finalAllPrice = computed(() => {
-    var countPrice = inputValue.value || 0
-    console.log(countPrice);
-    
-
-    // 价格区域打折
-    for (let index = 0; index < rateRangeStore.length; index++) {
-        const element = rateRangeStore[index];
-        if (countPrice>element.min && countPrice<=element.max) {
-           countPrice =countPrice*baseRate*element.value
-           console.log(countPrice+'=输入值* 基础倍率：'+baseRate+'*区间倍率：'+element.value);
-           
+const handleFocus = (e) => {
+    // console.log(e.target.value);
+    if (e.target.value === 0 || e.target.value === '0') {
+        {
+            e.target.value = ''
         }
     }
+}
+    // 点击图片切换选中状态（核心方法）
+    const toggleItem = (list, item) => {
+        // console.log(list,item);
 
-
-    // if(countPrice>0 && countPrice<=40000){
-    //     countPrice =countPrice*baseRate*0.35
-    // }
-    // else{
-    //     countPrice =countPrice*baseRate*0.22
-    // }
-
-    // 二次打折
-    if(iftowChange.value === '可二次实名'){
-        countPrice = countPrice+ checkTotal.value
-    }else{
-        countPrice = countPrice * towRate + checkTotal.value
+        const found = list.find(i => i.wpName === item.wpName)
+        if (found) {
+            return list.filter(i => i.wpName !== item.wpName)
+        } else {
+            return [...list, item]
+        }
     }
+    // 复选框价格合计
+    const checkTotal = computed(() => {
+        return checkedList.value.reduce((sum, item) => sum + item.wpPrice, 0)
+    })
 
-    return Number(Number(countPrice || 0).toFixed(2))
-})
+    // 最终总价（实名打折，区域打折，额外内容）
+    const finalAllPrice = computed(() => {
+        var countPrice = inputValue.value || 0
+        console.log(countPrice);
 
-// 重置
-const resetAll = () => {
-    checkedList.value = []
-    inputValue.value = 0
-    iftowChange.value = '可二次实名'
-}
+
+        // 价格区域打折
+        for (let index = 0; index < rateRangeStore.length; index++) {
+            const element = rateRangeStore[index];
+            if (countPrice > element.min && countPrice <= element.max) {
+                countPrice = countPrice * baseRate * element.value
+                console.log(countPrice + '=输入值* 基础倍率：' + baseRate + '*区间倍率：' + element.value);
+
+            }
+        }
+
+        // 二次打折
+        if (iftowChange.value === '可二次实名') {
+            countPrice = countPrice + checkTotal.value
+        } else {
+            countPrice = countPrice * towRate + checkTotal.value
+        }
+
+        // 额外内容加价
+        countPrice = countPrice + goldNum.value * goldPrice + orangeNum.value * orangePrice + purpleNum.value * purplePrice
+        console.log(countPrice +'+'+goldNum.value + ' * ' + goldPrice + '+' + orangeNum.value + ' * ' + orangePrice + '+' + purpleNum.value + ' * ' + purplePrice);
+
+        return Number(Number(countPrice || 0).toFixed(2))
+    })
+
+    // 重置
+    const resetAll = () => {
+        checkedList.value = []
+        inputValue.value = 0
+        iftowChange.value = '可二次实名'
+        goldNum.value = 0
+        orangeNum.value = 0
+        purpleNum.value = 0
+    }
 // 文本复制
-const copyText = ()=>{
+// const copyText = ()=>{
 
-}
+// }
 </script>
 
 <style lang="css" scoped>
@@ -171,11 +194,14 @@ const copyText = ()=>{
     flex-direction: column;
     gap: 1.5rem;
 }
+
 /* 输入框整体背景 */
 :deep(.el-input-number__wrapper) {
-  background-color: #621212; /* 你想要的背景色 */
-  border-color: #ddd;
+    background-color: #621212;
+    /* 你想要的背景色 */
+    border-color: #ddd;
 }
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -208,48 +234,49 @@ const copyText = ()=>{
 
 /* 🔥 深色背景专用输入框 */
 .dark-input {
-  width: 200px;
-  padding: 10px 15px;
-  font-size: 14px;
+    width: 200px;
+    padding: 10px 15px;
+    font-size: 14px;
 
-  /* 半透明玻璃质感 */
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+    /* 半透明玻璃质感 */
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
 
-  /* 文字白色 */
-  color: #fff !important;
-  outline: none;
+    /* 文字白色 */
+    color: #fff !important;
+    outline: none;
 
-  /* 动画效果 */
-  transition: all 0.3s ease;
+    /* 动画效果 */
+    transition: all 0.3s ease;
 }
 
 /* 聚焦效果 */
 .dark-input:focus {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 /* 提示文字灰色 */
 .dark-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* 鼠标悬浮 */
 .dark-input:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* 去掉输入框默认箭头（可选） */
 .dark-input::-webkit-outer-spin-button,
 .dark-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
+
 .dark-input {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 
@@ -290,7 +317,8 @@ const copyText = ()=>{
     display: flex;
     flex-direction: column;
 }
-.btn{
+
+.btn {
     margin-top: 10px;
 }
 
@@ -371,25 +399,33 @@ const copyText = ()=>{
         width: 100%;
     }
 }
-
+.exContent {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
 .countPrice {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 .rePrice {
     font-size: 20px;
     /* width: 350px; */
     flex: 1;
     color: #fff;
 }
-.price_btn{
+
+.price_btn {
     width: 100px;
     text-align: center;
     margin: 0 20px;
 }
-.price_text{
+
+.price_text {
     border: #fff 1px solid;
     flex: 1;
     border-radius: 5px;
