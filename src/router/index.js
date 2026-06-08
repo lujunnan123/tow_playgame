@@ -4,6 +4,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 // 2. 引入你的页面
 import Home from '@/assets/pages/wwqyPrice.vue'
 import Pconfig from '@/assets/pages/Price_config.vue'
+import Extend from '@/assets/pages/Extend_page.vue'
 
 // 3. 配置路由规则
 const routes = [
@@ -16,7 +17,12 @@ const routes = [
     path: '/Pconfig',
     name: 'Pconfig',
     component: Pconfig
-  }
+  },
+  {
+    path: '/Extend',
+    name: 'Extend',
+    component: Extend
+  },
 ]
 
 // 4. 创建路由实例

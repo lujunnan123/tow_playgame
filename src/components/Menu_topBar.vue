@@ -15,7 +15,8 @@
     <el-menu-item index="Pconfig" >      
       价格配置
     </el-menu-item>
-    <el-menu-item index="3">组合配置</el-menu-item>
+    <el-menu-item index="Extend">组合配置</el-menu-item>
+    <el-menu-item index="Sjz">三角洲</el-menu-item>
 
     </el-menu>
 </template>
@@ -26,11 +27,15 @@ import router from '../router'
 const activeIndex = ref('home')
 
 const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
   if(key == "home"){
     router.push('/')
   }else if(key == "Pconfig"){
     router.push('/Pconfig')
+  }else if(key == "Extend"){
+    router.push('/Extend')
+  }else if(key == "Sjz"){
+    router.push('/Sjz')
   }
 }
 </script>

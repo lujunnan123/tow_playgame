@@ -1,5 +1,9 @@
 <template>
-    <div class="container" id="mainContainer">
+
+  <!-- 数据没加载完 → 显示加载中 -->
+    <div v-if="loading" class="loading">加载中...</div>
+
+    <div v-else class="container" id="mainContainer">
         <!-- 表单区域 -->
         <div id="formContainer" class="form-container">
             <h2>无畏契约估价</h2>
@@ -59,7 +63,7 @@
 
 <script setup>
 document.title = "无畏契约估价"
-import { ref, computed } from 'vue'
+import { ref, computed,onMounted } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 import { ElText } from 'element-plus'
 
@@ -69,17 +73,22 @@ const wpObject = counterStore.weaponPackage
 const rateStore = counterStore.rateObj
 const rateRangeStore = counterStore.rangeRate
 
+
 // 响应式数据
 const checkedList = ref([])
 const inputValue = ref(0) // 输入框值
 const iftowChange = ref('可二次实名') // 单选框值
-const baseRate = rateStore[0].Rate
-const towRate = rateStore[1].Rate
+const loding = ref(true)
+
+// 页面挂载后，请求数据
+onMounted(async()=>{    
+    await counterStore.rangeData()
+    loding.value = ref(false)
+
+})
 
 // 点击图片切换选中状态（核心方法）
 const toggleItem = (list, item) => {
-    // console.log(list,item);
-    
     const found = list.find(i => i.wpName === item.wpName)
     if (found) {
         return list.filter(i => i.wpName !== item.wpName)
@@ -95,9 +104,6 @@ const checkTotal = computed(() => {
 // 最终总价（实名打折，区域打折）
 const finalAllPrice = computed(() => {
     var countPrice = inputValue.value || 0
-    console.log(countPrice);
-    
-
     // 价格区域打折
     for (let index = 0; index < rateRangeStore.length; index++) {
         const element = rateRangeStore[index];
@@ -107,14 +113,6 @@ const finalAllPrice = computed(() => {
            
         }
     }
-
-
-    // if(countPrice>0 && countPrice<=40000){
-    //     countPrice =countPrice*baseRate*0.35
-    // }
-    // else{
-    //     countPrice =countPrice*baseRate*0.22
-    // }
 
     // 二次打折
     if(iftowChange.value === '可二次实名'){

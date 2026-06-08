@@ -4,6 +4,7 @@
         <div class="title_top">
             <div class="title">估价道具配置</div>
             <div class="title_btn">
+                <button class="btn">上传配置</button>
                 <button class="btn">新增一级类目</button>
             </div>
         </div>
@@ -100,13 +101,17 @@
         <!-- 区间倍率弹窗 -->
         <el-dialog v-model="dialogVisible1" title="倍率调整" width="450px" @close="inputValue = ''">
 
-            <div v-for="( item,index) in rangeRateStore" :key="index">
+            <div v-for="(item, index) in rangeRateStore" :key="index">
                 <div class="RateItem" style="margin-top:5px;color: #000;">
-                    <el-input style="width: 100px;" v-model="item.min" :placeholder="item.min" @blur="RateChange(index,item)" /> ：
-                    <el-input style="width: 100px;" v-model="item.max" :placeholder="item.max" @blur="RateChange(index,item)" />
+                    <el-input style="width: 100px;" v-model="item.min" :placeholder="item.min"
+                        @blur="RateChange(index, item)" />
+                    ：
+                    <el-input style="width: 100px;" v-model="item.max" :placeholder="item.max"
+                        @blur="RateChange(index, item)" />
                     倍率：
-                    <el-input style="width: 100px;" v-model="item.value" :placeholder="item.value" @blur="RateChange(index,item)" />
-                    
+                    <el-input style="width: 100px;" v-model="item.value" :placeholder="item.value"
+                        @blur="RateChange(index, item)" />
+
                     <el-button style="margin-left: 5px;" size="small" :icon="Minus" circle @click="RRateDel(index)" />
                 </div>
             </div>
@@ -128,13 +133,16 @@
 
 <script setup>
 import { useCounterStore } from '@/stores/counter.js'
-import { Delete, Download, Plus, ZoomIn,Minus } from '@element-plus/icons-vue'
+import { Delete, Download, Plus, ZoomIn, Minus } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
+import cloudbase from '@cloudbase/js-sdk';
 const counterStore = useCounterStore()
 const rateStore = counterStore.rateObj
 const weaponPackage = counterStore.weaponPackage
 const rangeRateStore = counterStore.rangeRate
 // console.log(rangeRateStore);
+
+const app = cloudbase.init({ env: 'game-client-d1gae0klo4cfd7751' });
 
 const inputValue = ref('')
 const dialogVisible = ref(false)
@@ -171,27 +179,56 @@ const handleDelete = (Iteminfo) => {
     const delIndex = Iteminfo.$index
     counterStore.deleteItem(delIndex)
 }
-// 图片上上传
-const getImgUrl = (file) => {
-    const url = URL.createObjectURL(file.raw)
-    addImage.value = url
+
+// 图片上传
+
+const getImgUrl = async (file) => {
+    // const url = URL.createObjectURL(file.raw)
+    // addImage.value = url
+    
+    const title = `images/weapon/${Date.now()}/_${file.name}`
+    async function saveArticle (title, file){
+        const fileID = await uploadImage(file);
+
+        await app.database().collection('wwqy_weapon').add({
+            title: title,
+            coverImage: fileID
+        });
+    }
+
 }
+
+const uploadImage = async(file)=> {
+  const result = await app.uploadFile({
+    cloudPath: `images/${Date.now()}_${file.name}`,
+    filePath: file
+  });
+  return result.fileID;
+}
+
+
+
 // 新增子项
 const submitAdd = () => {
     counterStore.addItem(addName.value, addPrice.value, addImage.value)
     dialogVisible.value = false
 }
+
+
+
+
+
 // 区间倍率调整
-const RateChange = (index,Iteminfo)=>{
+const RateChange = (index, Iteminfo) => {
     // console.log(index,Iteminfo);
-    counterStore.updateRangeRate(index,Iteminfo)
+    counterStore.updateRangeRate(index, Iteminfo)
 }
 // 区间倍率删除
-const RRateDel = (num)=>{
+const RRateDel = (num) => {
     counterStore.delRangeRate(num)
 }
 // 区间倍率新增
-const RRateAdd = ()=>{
+const RRateAdd = () => {
     counterStore.addRangeRate()
 }
 
