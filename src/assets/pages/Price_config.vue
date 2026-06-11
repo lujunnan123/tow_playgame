@@ -171,7 +171,7 @@ const WpNameChange = (Iteminfo) => {
 const PriceChange = (Iteminfo) => {
     const index = Iteminfo.$index
     const value = Number(Iteminfo.row.wpPrice)
-    counterStore.updatewPrice(index, value)
+    counterStore.updatawPrice(index, value)
 }
 
 // 单行删除

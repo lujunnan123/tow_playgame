@@ -5,3 +5,9 @@ export const cloudbase = cloudbaseSDK.init({
   region: import.meta.env.VITE_CLOUDBASE_REGION,
   accessKey: import.meta.env.VITE_CLOUDBASE_ACCESS_KEY
 });
+
+
+// 匿名登录（本地调试必备，控制台要开启匿名登录）
+cloudbase.auth().anonymousAuthProvider().signIn()
+
+export default cloudbase
