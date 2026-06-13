@@ -4,7 +4,7 @@
         <div class="title_top">
             <div class="title">估价道具配置</div>
             <div class="title_btn">
-                <button class="btn">上传配置</button>
+                <button class="btn" @click="uploadHandle">上传配置</button>
                 <button class="btn">新增一级类目</button>
             </div>
         </div>
@@ -214,10 +214,6 @@ const submitAdd = () => {
     dialogVisible.value = false
 }
 
-
-
-
-
 // 区间倍率调整
 const RateChange = (index, Iteminfo) => {
     // console.log(index,Iteminfo);
@@ -231,6 +227,12 @@ const RRateDel = (num) => {
 const RRateAdd = () => {
     counterStore.addRangeRate()
 }
+
+// 保存配置
+const uploadHandle = ()=>{
+    counterStore.saveAll()
+}
+
 
 </script>
 
