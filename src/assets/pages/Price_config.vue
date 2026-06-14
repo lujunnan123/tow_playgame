@@ -164,14 +164,14 @@ const RateBaseChange = (indexNum, Iteminfo) => {
 const WpNameChange = (Iteminfo) => {
     const index = Iteminfo.$index
     const value = Iteminfo.row.wpName
-    counterStore.updatewName(index, value)
+    counterStore.updateWp(index)
 }
 
 // 修改价格
 const PriceChange = (Iteminfo) => {
     const index = Iteminfo.$index
     const value = Number(Iteminfo.row.wpPrice)
-    counterStore.updatawPrice(index, value)
+    counterStore.updateWp(index)
 }
 
 // 单行删除

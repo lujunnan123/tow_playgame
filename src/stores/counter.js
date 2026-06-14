@@ -10,7 +10,7 @@ export const useCounterStore = defineStore('counter', () => {
   const weaponPackage = ref([])
   const rateObj = ref([])
   const rangeRate = ref([])
-const message = ref("");
+  const message = ref("");
 
   // 1.加载数据
   const rangeData = async () => {
@@ -48,30 +48,37 @@ const message = ref("");
       console.log(error);
     }
   }
-  // 道具价格修改
-  const updatawPrice = async(index, num) => {
-    weaponPackage.value[index].wpPrice = Number(num);
-    const cloundId = index+1
+
+  // 道具信息修改
+  const updateWp = async (index) => {
+    const { id, wpName, wpPrice, weapon_img } = weaponPackage.value[index]
+    // console.log( { id, wpName, wpPrice, weapon_img } );
+    try {
       // 更新 wwqy_weapon 表中 id 为指定值的数据
-    const { error } = await cloudbase.rdb().from("wwqy_weapon").update({ wpPrice: 700 }).eq("wpName", "离火扇");
-    if (!error) {
-      message.value = "更新成功！";
-    } else {
-      message.value = "更新失败：" + error.message;
+      await cloudbase.rdb()
+        .from("wwqy_weapon")
+        .upsert({ id, wpName, wpPrice, weapon_img });
+    } catch (error) {
+      console.log(error);
     }
-
-
-
   }
-  // 道具名字修改 
-  const updatewName = (index, str) => {
-    weaponPackage.value[index].wpName = str;
-  }
+  
   // 道具数据删除
-  const deleteItem = (index) => {
-    weaponPackage.value.splice(index, 1)
+  const deleteItem = async(index) => {
+    const { id } = weaponPackage.value[index]
+    weaponPackage.value.splice(index,1)
+    try {
+      // 删除 wwqy_weapon 表中 id 为指定值的数据
+      await cloudbase.rdb()
+        .from("wwqy_weapon")
+        .delete()
+        .eq("id", id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
+  
   // 基础比例修改
   const updateRate = (index, num) => {
     rateObj.value[index].Rate = num;
@@ -105,8 +112,9 @@ const message = ref("");
     weaponPackage,
     rateObj,
     rangeRate,
+    updateWp,
     addItem,
-    updatawPrice,
+
     deleteItem,
     updatewName,
     updateRate,
