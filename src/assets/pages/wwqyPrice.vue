@@ -1,6 +1,6 @@
 <template>
 
-  <!-- 数据没加载完 → 显示加载中 -->
+    <!-- 数据没加载完 → 显示加载中 -->
     <div v-if="loading" class="loading">加载中...</div>
 
     <div v-else class="container" id="mainContainer">
@@ -12,7 +12,8 @@
                     <!-- 皮肤资产价值 -->
                     <div class="form-item">
                         <label class="form-label">皮肤资产价值：</label>
-                        <input v-model="inputValue" :min="0" @change="handleChange" class="dark-input"  controls-position="right"/>
+                        <input v-model="inputValue" :min="0" @change="handleChange" class="dark-input"
+                            controls-position="right" />
                     </div>
 
                     <!-- 二次实名选项 -->
@@ -30,21 +31,21 @@
                         <div class="checkbox-group" id="knifeCheckboxGroup">
                             <el-checkbox-group v-model="checkedList" class="checkbox-group">
                                 <div v-for="(p, index) in wpObject" :key="p.wpName" class="checkbox-item">
-                                    <el-image style="width: 160px; height: 160px" :src="p.url" fit="contain"
-                                        @click.native="checkedList = toggleItem(checkedList, p)" />
+                                    <!-- <el-image style="width: 160px; height: 160px" :src="p.url" fit="contain"
+                                        @click.native="checkedList = toggleItem(checkedList, p)" /> -->
                                     <el-checkbox :label="p" size="large">{{ p.wpName }}</el-checkbox>
                                 </div>
                             </el-checkbox-group>
                         </div>
                     </div>
-                   
+
                 </div>
                 <div class="countPrice">
 
                     <div class="rePrice">
                         回收建议价：
                         <text style="color: greenyellow;">
-                        {{ finalAllPrice }}</text>
+                            {{ finalAllPrice }}</text>
                     </div>
                     <div class="price_btn">
                         <el-button type="warning" class="btn" @click="resetAll">重置</el-button>
@@ -62,8 +63,8 @@
 </template>
 
 <script setup>
-document.title = "无畏契约估价"
-import { ref, computed,onMounted } from 'vue'
+document.title = "无畏-CloudVersion"
+import { ref, computed, onMounted } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 import { ElText } from 'element-plus'
 
@@ -78,13 +79,12 @@ const rateRangeStore = counterStore.rangeRate
 const checkedList = ref([])
 const inputValue = ref(0) // 输入框值
 const iftowChange = ref('可二次实名') // 单选框值
-const loding = ref(true)
+const loading = ref(true)
 
 // 页面挂载后，请求数据
-onMounted(async()=>{    
-    await counterStore.rangeData()
-    loding.value = ref(false)
-
+onMounted(async () => {
+    counterStore.rangeData()
+    loading.value = false
 })
 
 // 点击图片切换选中状态（核心方法）
@@ -104,20 +104,22 @@ const checkTotal = computed(() => {
 // 最终总价（实名打折，区域打折）
 const finalAllPrice = computed(() => {
     var countPrice = inputValue.value || 0
+    const baseRate = rateStore[0].Rate || 1
+    console.log("皮肤资产：" + countPrice);
+
     // 价格区域打折
     for (let index = 0; index < rateRangeStore.length; index++) {
         const element = rateRangeStore[index];
-        if (countPrice>element.min && countPrice<=element.max) {
-           countPrice =countPrice*baseRate*element.value
-           console.log(countPrice+'=输入值* 基础倍率：'+baseRate+'*区间倍率：'+element.value);
-           
+        if (countPrice > element.min && countPrice <= element.max) {
+            countPrice = countPrice * baseRate * element.value
+            console.log(countPrice + '=输入值  * 基础倍率：' + baseRate + ' * 区间倍率：' + element.value);
         }
     }
 
     // 二次打折
-    if(iftowChange.value === '可二次实名'){
-        countPrice = countPrice+ checkTotal.value
-    }else{
+    if (iftowChange.value === '可二次实名') {
+        countPrice = countPrice + checkTotal.value
+    } else {
         countPrice = countPrice * towRate + checkTotal.value
     }
 
@@ -130,10 +132,7 @@ const resetAll = () => {
     inputValue.value = 0
     iftowChange.value = '可二次实名'
 }
-// 文本复制
-const copyText = ()=>{
 
-}
 </script>
 
 <style lang="css" scoped>
@@ -169,11 +168,14 @@ const copyText = ()=>{
     flex-direction: column;
     gap: 1.5rem;
 }
+
 /* 输入框整体背景 */
 :deep(.el-input-number__wrapper) {
-  background-color: #621212; /* 你想要的背景色 */
-  border-color: #ddd;
+    background-color: #621212;
+    /* 你想要的背景色 */
+    border-color: #ddd;
 }
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -206,48 +208,49 @@ const copyText = ()=>{
 
 /* 🔥 深色背景专用输入框 */
 .dark-input {
-  width: 200px;
-  padding: 10px 15px;
-  font-size: 14px;
+    width: 200px;
+    padding: 10px 15px;
+    font-size: 14px;
 
-  /* 半透明玻璃质感 */
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+    /* 半透明玻璃质感 */
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
 
-  /* 文字白色 */
-  color: #fff !important;
-  outline: none;
+    /* 文字白色 */
+    color: #fff !important;
+    outline: none;
 
-  /* 动画效果 */
-  transition: all 0.3s ease;
+    /* 动画效果 */
+    transition: all 0.3s ease;
 }
 
 /* 聚焦效果 */
 .dark-input:focus {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
 }
 
 /* 提示文字灰色 */
 .dark-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* 鼠标悬浮 */
 .dark-input:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* 去掉输入框默认箭头（可选） */
 .dark-input::-webkit-outer-spin-button,
 .dark-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
+
 .dark-input {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 
@@ -288,7 +291,8 @@ const copyText = ()=>{
     display: flex;
     flex-direction: column;
 }
-.btn{
+
+.btn {
     margin-top: 10px;
 }
 
@@ -376,18 +380,21 @@ const copyText = ()=>{
     justify-content: space-between;
     align-items: center;
 }
+
 .rePrice {
     font-size: 20px;
     /* width: 350px; */
     flex: 1;
     color: #fff;
 }
-.price_btn{
+
+.price_btn {
     width: 100px;
     text-align: center;
     margin: 0 20px;
 }
-.price_text{
+
+.price_text {
     border: #fff 1px solid;
     flex: 1;
     border-radius: 5px;

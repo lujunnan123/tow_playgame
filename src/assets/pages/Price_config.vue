@@ -67,7 +67,7 @@
                     <!-- 单行删除 -->
                     <template #default="scope">
                         <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除?"
-                            @confirm="handleDelete(scope)" @cancel="cancelEvent">
+                            @confirm="handleDelete(scope)" >
                             <template #reference>
                                 <el-button type="danger">Delete</el-button>
                             </template>
@@ -154,23 +154,19 @@ const addPrice = ref('')
 
 
 // 调整基础倍率
-const RateBaseChange = (indexNum, Iteminfo) => {
-    const index = indexNum
-    const value = Number(Iteminfo.Rate)
-    counterStore.updateRate(index, value)
+const RateBaseChange = (indexNum) => {
+    counterStore.updateRate(indexNum)
 }
 
 // 修改名称
 const WpNameChange = (Iteminfo) => {
     const index = Iteminfo.$index
-    const value = Iteminfo.row.wpName
     counterStore.updateWp(index)
 }
 
 // 修改价格
 const PriceChange = (Iteminfo) => {
     const index = Iteminfo.$index
-    const value = Number(Iteminfo.row.wpPrice)
     counterStore.updateWp(index)
 }
 

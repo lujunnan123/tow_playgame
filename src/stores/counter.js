@@ -61,12 +61,13 @@ export const useCounterStore = defineStore('counter', () => {
     } catch (error) {
       console.log(error);
     }
+
   }
-  
+
   // 道具数据删除
-  const deleteItem = async(index) => {
+  const deleteItem = async (index) => {
     const { id } = weaponPackage.value[index]
-    weaponPackage.value.splice(index,1)
+    weaponPackage.value.splice(index, 1)
     try {
       // 删除 wwqy_weapon 表中 id 为指定值的数据
       await cloudbase.rdb()
@@ -78,34 +79,60 @@ export const useCounterStore = defineStore('counter', () => {
     }
   }
 
-  
+
   // 基础比例修改
-  const updateRate = (index, num) => {
-    rateObj.value[index].Rate = num;
+  const updateRate = async(index) => {
+    const { id, RateName, Rate } = rateObj.value[index]
+    try {
+      // 更新 wwqy_weapon 表中 id 为指定值的数据
+      await cloudbase.rdb()
+        .from("wwqy_rate")
+        .upsert({ id, RateName, Rate });
+    } catch (error) {
+      console.log(error);
+    }
+
   }
-  // 区间比例修改
-  const updateRangeRate = (index, obj) => {
-    rangeRate.value[index] = obj
-  }
+
   // 区间比例新增
-  const addRangeRate = () => {
-    const obj = { min: 0, max: 900719925474099, value: 0 }
-    rangeRate.value.push(obj)
+  const addRangeRate = async() => {
+    const obj = { min: 900719925474099, max: 900719925474099, value: 1 }
+
+    try {
+      await cloudbase.rdb().from("wwqy_rangerate").insert(obj)
+      rangeRate.value.push(obj)
+    } catch (error) {
+      console.log(error);
+    }
+
+
   }
   // 区间比例删除
-  const delRangeRate = (index) => {
+  const delRangeRate = async(index) => {
+   const { id } = rangeRate.value[index]
     rangeRate.value.splice(index, 1)
+    try {
+      // 删除 wwqy_weapon 表中 id 为指定值的数据
+      await cloudbase.rdb()
+        .from("wwqy_rangerate")
+        .delete()
+        .match({id:index});
+    } catch (error) {
+      console.log(error);
+    }
   }
-
-  const saveAll = () => {
-    console.log('获取修改后数据', {
-      rangeRate: rangeRate.value,
-      rateObj: rateObj.value,
-      weaponPackage: weaponPackage.value
-    })
-
+  // 区间比例修改
+  const updateRangeRate = async(index, obj) => {
+     const { id, min,max,value } = rangeRate.value[index]
+    try {
+      // 更新 wwqy_weapon 表中 id 为指定值的数据
+      await cloudbase.rdb()
+        .from("wwqy_rangerate")
+        .upsert({ id, min,max,value } );
+    } catch (error) {
+      console.log(error);
+    }
   }
-
 
   return {
     rangeData,
@@ -114,14 +141,11 @@ export const useCounterStore = defineStore('counter', () => {
     rangeRate,
     updateWp,
     addItem,
-
     deleteItem,
-    updatewName,
     updateRate,
     updateRangeRate,
     addRangeRate,
-    delRangeRate,
-    saveAll
+    delRangeRate
   }
 },
   {
