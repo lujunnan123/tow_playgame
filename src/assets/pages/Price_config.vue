@@ -82,7 +82,7 @@
                     <!-- 单行删除 -->
                     <template #default="scope">
                         <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除?"
-                            @confirm="handleDelete(scope)" @cancel="cancelEvent">
+                            @confirm="handleDelete(scope)">
                             <template #reference>
                                 <el-button type="danger">Delete</el-button>
                             </template>

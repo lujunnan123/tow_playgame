@@ -128,10 +128,6 @@ const handleFocus = (e) => {
             if (countPrice > element.min && countPrice <= element.max) {
                 countPrice = countPrice * baseRate * element.value
                 console.log(countPrice+'=输入值  * 基础倍率：'+baseRate+' * 区间倍率：'+element.value);
-           
-            }else{
-                console.log("警告：","不在区间范围内");
-                
             }
         }
 
