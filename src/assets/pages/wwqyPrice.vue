@@ -8,14 +8,14 @@
                     <!-- 皮肤资产价值 -->
                     <div class="form-item">
                         <label class="form-label">皮肤资产价值：</label>
-                        <input v-model="inputValue" :min="0" @focus="handleFocus" @change="handleChange"
+                        <input v-model="inputValue" :min="0" @focus="handleFocus"
                             class="dark-input" controls-position="right" />
                     </div>
 
                     <!-- 二次实名选项 -->
                     <div class="form-item">
                         <label class="form-label">是否可二次：</label>
-                        <el-radio-group v-model="iftowChange" @change="handleRadioChange">
+                        <el-radio-group v-model="iftowChange">
                             <el-radio value="可二次实名">可二次实名</el-radio>
                             <el-radio value="不可二次实名">不可二次实名</el-radio>
                         </el-radio-group>
@@ -127,7 +127,7 @@ const handleFocus = (e) => {
             const element = rateRangeStore[index];
             if (countPrice > element.min && countPrice <= element.max) {
                 countPrice = countPrice * baseRate * element.value
-                console.log(countPrice+'=输入值  * 基础倍率：'+baseRate+' * 区间倍率：'+element.value);
+                console.log('基础倍率：'+baseRate+' * 区间倍率：'+element.value);
             }
         }
 
