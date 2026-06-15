@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-document.title = "无畏契约估价"
+document.title = "无畏-LocalVersion"
 import { ref, computed } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 import { ElText } from 'element-plus'
@@ -118,8 +118,8 @@ const handleFocus = (e) => {
 
     // 最终总价（实名打折，区域打折，额外内容）
     const finalAllPrice = computed(() => {
-        var countPrice = inputValue.value || 0
-        console.log(countPrice);
+        var countPrice = inputValue.value || 0 
+        console.log("皮肤资产："+countPrice);
 
 
         // 价格区域打折
@@ -127,8 +127,11 @@ const handleFocus = (e) => {
             const element = rateRangeStore[index];
             if (countPrice > element.min && countPrice <= element.max) {
                 countPrice = countPrice * baseRate * element.value
-                console.log(countPrice + '=输入值* 基础倍率：' + baseRate + '*区间倍率：' + element.value);
-
+                console.log(countPrice+'=输入值  * 基础倍率：'+baseRate+' * 区间倍率：'+element.value);
+           
+            }else{
+                console.log("警告：","不在区间范围内");
+                
             }
         }
 
