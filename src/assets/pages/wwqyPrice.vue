@@ -12,14 +12,14 @@
                     <!-- 皮肤资产价值 -->
                     <div class="form-item">
                         <label class="form-label">皮肤资产价值：</label>
-                        <input v-model="inputValue" :min="0" @change="handleChange" class="dark-input"
-                            controls-position="right" />
+                        <input v-model="inputValue" :min="0" class="dark-input" controls-position="right"
+                            @focus="handleFocus" />
                     </div>
 
                     <!-- 二次实名选项 -->
                     <div class="form-item">
                         <label class="form-label">是否可二次：</label>
-                        <el-radio-group v-model="iftowChange" @change="handleRadioChange">
+                        <el-radio-group v-model="iftowChange">
                             <el-radio value="可二次实名">可二次实名</el-radio>
                             <el-radio value="不可二次实名">不可二次实名</el-radio>
                         </el-radio-group>
@@ -70,10 +70,11 @@ import { ElText } from 'element-plus'
 
 // 拿到仓库实例
 const counterStore = useCounterStore()
-const wpObject = counterStore.weaponPackage
-const rateStore = counterStore.rateObj
-const rateRangeStore = counterStore.rangeRate
-
+let baseRate = 1
+let towRate = 1
+let wpObject = []
+let rateStore = []
+let rateRangeStore = []
 
 // 响应式数据
 const checkedList = ref([])
@@ -83,10 +84,25 @@ const loading = ref(true)
 
 // 页面挂载后，请求数据
 onMounted(async () => {
-    counterStore.rangeData()
+    // ! 请求完数据后在加载页面
+    await counterStore.rangeData()
+    rateStore = counterStore.rateObj
+    rateRangeStore = counterStore.rangeRate
+    wpObject = counterStore.weaponPackage
+    baseRate = rateStore[0].Rate
+    towRate = rateStore[1].Rate
+
     loading.value = false
 })
 
+const handleFocus = (e) => {
+    // console.log(e.target.value);
+    if (e.target.value === 0 || e.target.value === '0') {
+        {
+            e.target.value = ''
+        }
+    }
+}
 // 点击图片切换选中状态（核心方法）
 const toggleItem = (list, item) => {
     const found = list.find(i => i.wpName === item.wpName)
@@ -103,8 +119,8 @@ const checkTotal = computed(() => {
 
 // 最终总价（实名打折，区域打折）
 const finalAllPrice = computed(() => {
+    console.log("------------------------------------------");
     var countPrice = inputValue.value || 0
-    const baseRate = rateStore[0].Rate || 1
     console.log("皮肤资产：" + countPrice);
 
     // 价格区域打折
@@ -112,15 +128,17 @@ const finalAllPrice = computed(() => {
         const element = rateRangeStore[index];
         if (countPrice > element.min && countPrice <= element.max) {
             countPrice = countPrice * baseRate * element.value
-            console.log(countPrice + '=输入值  * 基础倍率：' + baseRate + ' * 区间倍率：' + element.value);
+            console.log('基础倍率：' + baseRate + ' * 区间倍率：' + element.value);
         }
     }
 
     // 二次打折
     if (iftowChange.value === '可二次实名') {
         countPrice = countPrice + checkTotal.value
+
     } else {
         countPrice = countPrice * towRate + checkTotal.value
+        console.log("不可二次实名:" + towRate);
     }
 
     return Number(countPrice.toFixed(2))

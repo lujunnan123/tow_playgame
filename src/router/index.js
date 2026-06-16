@@ -5,23 +5,35 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '@/assets/pages/wwqyPrice.vue'
 import Pconfig from '@/assets/pages/Price_config.vue'
 import Extend from '@/assets/pages/Extend_page.vue'
+import Login from '@/assets/pages/Login_page.vue'
 
 // 3. 配置路由规则
 const routes = [
   {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/Pconfig',
-    name: 'Pconfig',
-    component: Pconfig
-  },
-  {
-    path: '/Extend',
-    name: 'Extend',
-    component: Extend
+    redirect: '/home',
+    children: [
+      {
+        path: '/',
+        name: 'Home',
+        component: Home
+      },
+      {
+        path: '/Pconfig',
+        name: 'Pconfig',
+        component: Pconfig
+      },
+      {
+        path: '/Extend',
+        name: 'Extend',
+        component: Extend
+      },
+    ]
   },
 ]
 

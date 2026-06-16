@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 
 import { cloudbase } from '@/utils/cloudbase'
+
 import { ref } from 'vue'
 
 
@@ -66,14 +67,46 @@ export const useCounterStore = defineStore('counter', () => {
 
   // 道具数据删除
   const deleteItem = async (index) => {
-    const { id } = weaponPackage.value[index]
-    weaponPackage.value.splice(index, 1)
+    // const { id } = weaponPackage.value[index]
+    // console.log(typeof (id), id);
+
+    const item = weaponPackage.value[index]
+    const rawId = item.id
+    const rawOpenid = item._openid
+    // 关键打印，复制控制台结果发给我也能定位
+    console.log('完整条目item:', JSON.stringify(item))
+    console.log('rawId原值:', rawId, '类型:', typeof rawId, '转数字后:', Number(rawId))
+
+    if (rawId === undefined || rawId === null || rawId === '') {
+      console.log('id无效，终止删除');
+      return;
+    }
+    const delId = Number(rawId);
+
+    // 先删云端，后删本地
     try {
       // 删除 wwqy_weapon 表中 id 为指定值的数据
-      await cloudbase.rdb()
+      const res = await cloudbase.rdb()
         .from("wwqy_weapon")
         .delete()
-        .eq("id", id);
+        .eq("id", delId).eq("_openid", rawId)
+      // 远程调用云端函数，数据库操作全在服务器完成
+      // const { result } = await cloudbase.callFunction({
+      //   name: "delWeapon",
+      //   data: { delId: delId }
+      // })
+
+      console.log('删除完整返回res:', res)
+      console.log('affectedRows:', res.affectedRows);
+
+      // 只有真实删除到数据才移除本地
+      if (res.affectedRows > 0) {
+        weaponPackage.value.splice(index, 1)
+        console.log('本地数据已移除')
+      } else {
+        console.warn('数据库无匹配数据，不删除本地')
+      }
+
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +114,7 @@ export const useCounterStore = defineStore('counter', () => {
 
 
   // 基础比例修改
-  const updateRate = async(index) => {
+  const updateRate = async (index) => {
     const { id, RateName, Rate } = rateObj.value[index]
     try {
       // 更新 wwqy_weapon 表中 id 为指定值的数据
@@ -95,7 +128,7 @@ export const useCounterStore = defineStore('counter', () => {
   }
 
   // 区间比例新增
-  const addRangeRate = async() => {
+  const addRangeRate = async () => {
     const obj = { min: 900719925474099, max: 900719925474099, value: 1 }
 
     try {
@@ -108,27 +141,27 @@ export const useCounterStore = defineStore('counter', () => {
 
   }
   // 区间比例删除
-  const delRangeRate = async(index) => {
-   const { id } = rangeRate.value[index]
+  const delRangeRate = async (index) => {
+    const { id } = rangeRate.value[index]
     rangeRate.value.splice(index, 1)
     try {
       // 删除 wwqy_weapon 表中 id 为指定值的数据
       await cloudbase.rdb()
         .from("wwqy_rangerate")
         .delete()
-        .match({id:index});
+        .match({ id: index });
     } catch (error) {
       console.log(error);
     }
   }
   // 区间比例修改
-  const updateRangeRate = async(index, obj) => {
-     const { id, min,max,value } = rangeRate.value[index]
+  const updateRangeRate = async (index, obj) => {
+    const { id, min, max, value } = rangeRate.value[index]
     try {
       // 更新 wwqy_weapon 表中 id 为指定值的数据
       await cloudbase.rdb()
         .from("wwqy_rangerate")
-        .upsert({ id, min,max,value } );
+        .upsert({ id, min, max, value });
     } catch (error) {
       console.log(error);
     }

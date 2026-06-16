@@ -16,7 +16,7 @@
       价格配置
     </el-menu-item>
     <el-menu-item index="Extend">组合配置</el-menu-item>
-    <el-menu-item index="Sjz">三角洲</el-menu-item>
+    
 
     </el-menu>
 </template>
@@ -34,8 +34,6 @@ const handleSelect = (key, keyPath) => {
     router.push('/Pconfig')
   }else if(key == "Extend"){
     router.push('/Extend')
-  }else if(key == "Sjz"){
-    router.push('/Sjz')
   }
 }
 </script>
